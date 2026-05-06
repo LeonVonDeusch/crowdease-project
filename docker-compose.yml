@@ -1,0 +1,106 @@
+# ─────────────────────────────────────────────────────────────────
+# CrowdEase Development Environment
+# ─────────────────────────────────────────────────────────────────
+#
+# Cara pakai:
+#
+# Setup awal saja (jalankan database):
+#     docker-compose up mysql
+#
+# Setelah Laravel terinstall, jalankan semua service:
+#     docker-compose up
+#
+# Berhentikan semua service:
+#     docker-compose down
+#
+# Reset data database (hati-hati, hapus semua data!):
+#     docker-compose down -v
+
+services:
+
+  # ─── Database ────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: crowdease-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: crowdease
+      MYSQL_USER: crowdease
+      MYSQL_PASSWORD: crowdease_secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  # ─── phpMyAdmin (opsional, untuk debug DB visual) ────────────
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: crowdease-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: crowdease
+      PMA_PASSWORD: crowdease_secret
+    ports:
+      - "8080:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # ─── Backend Laravel ─────────────────────────────────────────
+  # NOTE: Service ini di-comment dulu sampai Laravel terinstall.
+  # Setelah `composer create-project` di folder ./backend, hapus
+  # tanda komentar (#) di bawah ini, lalu `docker-compose up backend`.
+  #
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: crowdease-backend
+  #   restart: unless-stopped
+  #   environment:
+  #     DB_CONNECTION: mysql
+  #     DB_HOST: mysql
+  #     DB_PORT: 3306
+  #     DB_DATABASE: crowdease
+  #     DB_USERNAME: crowdease
+  #     DB_PASSWORD: crowdease_secret
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./backend:/var/www/html
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #   command: php artisan serve --host=0.0.0.0 --port=8000
+
+  # ─── IoT Simulator (Python) ──────────────────────────────────
+  # Simulator umumnya lebih nyaman dijalankan langsung di host
+  # (bukan di Docker) saat development, agar mudah lihat output
+  # warna-warni di terminal. Service ini dimasukkan untuk demo
+  # akhir saja saat semua jalan dalam container.
+  #
+  # iot-simulator:
+  #   build:
+  #     context: ./iot-simulator
+  #     dockerfile: Dockerfile
+  #   container_name: crowdease-iot-simulator
+  #   restart: unless-stopped
+  #   environment:
+  #     CROWDEASE_BASE_URL: http://backend:8000
+  #     CROWDEASE_API_KEY: ${CROWDEASE_API_KEY}
+  #   depends_on:
+  #     - backend
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  default:
+    name: crowdease-network
