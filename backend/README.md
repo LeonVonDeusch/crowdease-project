@@ -175,8 +175,8 @@ php artisan test --coverage
 
 Sebelum demo akhir, pastikan:
 
-- [ ] `php artisan migrate:fresh --seed` jalan tanpa error
-- [ ] User operator default sudah dibuat oleh seeder (`operator@crowdease.test` / `secret123`)
+- [x] `php artisan migrate:fresh --seed` jalan tanpa error
+- [x] User operator default sudah dibuat oleh seeder (`operator@crowdease.test` / `secret123`)
 - [ ] Sample API key sudah dibuat oleh seeder dan di-print ke console (untuk dipakai simulator)
 - [ ] `php artisan scribe:generate` jalan dan dokumentasi tersedia di `/docs`
 - [ ] Database sudah punya 5 koridor + 7 armada + sample halte
