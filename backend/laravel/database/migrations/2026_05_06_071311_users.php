@@ -31,16 +31,16 @@ return new class extends Migration
             $table->timestamp('revoked_at')->nullable();
         });
 
-        Schema::create('personal_access_tokens', function (Blueprint $table) {
-            $table->id();
-            $table->string('tokenable_type');
-            $table->unsignedBigInteger('tokenable_id');
-            $table->index(['tokenable_type', 'tokenable_id']);
-            $table->string('name', 255);
-            $table->char('token', 64)->unique();
-            $table->timestamp('last_used_at')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('personal_access_tokens', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('tokenable_type');
+        //     $table->unsignedBigInteger('tokenable_id');
+        //     $table->index(['tokenable_type', 'tokenable_id']);
+        //     $table->string('name', 255);
+        //     $table->char('token', 64)->unique();
+        //     $table->timestamp('last_used_at')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -48,7 +48,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personal_access_tokens');
+        // Schema::dropIfExists('personal_access_tokens');
         Schema::dropIfExists('api_keys');
         Schema::dropIfExists('users');
     }
