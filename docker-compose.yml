@@ -27,7 +27,7 @@ services:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: crowdease
       MYSQL_USER: crowdease
-      MYSQL_PASSWORD: crowdease_secret
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
     ports:
       - "3306:3306"
     volumes:
@@ -56,28 +56,28 @@ services:
   # NOTE: Service ini di-comment dulu sampai Laravel terinstall.
   # Setelah `composer create-project` di folder ./backend, hapus
   # tanda komentar (#) di bawah ini, lalu `docker-compose up backend`.
-  #
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   container_name: crowdease-backend
-  #   restart: unless-stopped
-  #   environment:
-  #     DB_CONNECTION: mysql
-  #     DB_HOST: mysql
-  #     DB_PORT: 3306
-  #     DB_DATABASE: crowdease
-  #     DB_USERNAME: crowdease
-  #     DB_PASSWORD: crowdease_secret
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - ./backend:/var/www/html
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #   command: php artisan serve --host=0.0.0.0 --port=8000
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: crowdease-backend
+    restart: unless-stopped
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: crowdease
+      DB_USERNAME: root
+      # DB_PASSWORD: 
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: php artisan serve --host=0.0.0.0 --port=8000
 
   # ─── IoT Simulator (Python) ──────────────────────────────────
   # Simulator umumnya lebih nyaman dijalankan langsung di host
