@@ -27,7 +27,8 @@ services:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: crowdease
       MYSQL_USER: crowdease
-      MYSQL_ALLOW_EMPTY_PASSWORD: true
+      MYSQL_PASSWORD: crowdease_secret
+      # MYSQL_ALLOW_EMPTY_PASSWORD: true
     ports:
       - "3306:3306"
     volumes:
@@ -68,8 +69,8 @@ services:
       DB_HOST: mysql
       DB_PORT: 3306
       DB_DATABASE: crowdease
-      DB_USERNAME: root
-      # DB_PASSWORD: 
+      DB_USERNAME: crowdease
+      DB_PASSWORD: crowdease_secret
     ports:
       - "8000:8000"
     volumes:
